@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Barcode Scanner</title>
+    <!-- Include QuaggaJS library -->
+    <script src="https://cdn.jsdelivr.net/npm/quagga"></script>
+</head>
+<body>
+    <h1>Mobile Barcode Scanner</h1>
+    <div id="interactive" class="viewport"></div>
+    <p id="result-text">Scanned Text: <span id="scanned-text"></span></p>
+    <button onclick="startScanning()">Start Scanning</button>
+    <button onclick="initiateNewScan()">New Scan</button>
+    <button onclick="stopCamera()">Stop Camera</button>
+
+    <!-- Script to initialize QuaggaJS and handle barcode scanning -->
+    <script>
+        var isScanning = false;
+        var isCameraVisible = true;
+
+        // Function to start barcode scanning
+        function startScanning() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                Quagga.init({
+                    inputStream: {
+                        name: "Live",
+                        type: "LiveStream",
+                        target: document.querySelector('#interactive'),
+                    },
+                    decoder: {
+                        readers: ["ean_reader", "code_128_reader", "code_39_reader", "upc_reader"],
+                    },
+                }, function (err) {
+                    if (err) {
+                        console.error(err);
+                        return;
+                    }
+                    console.log("Initialization finished. Ready to start");
+                    Quagga.start();
+                    isScanning = true;
+                });
+
+                Quagga.onDetected(function (result) {
+                    console.log("Barcode detected and processed: ", result);
+                    var scannedText = result.codeResult.code;
+                    document.getElementById("scanned-text").textContent = scannedText;
+                    isScanning = false;
+                    Quagga.stop();
+                });
+
+                toggleCameraVisibility(true);
+            } else {
+                alert("Sorry, your browser doesn't support camera access. Please use a different browser.");
+            }
+        }
+
+        // Function to initiate a new scan after copying text
+        function initiateNewScan() {
+            if (!isScanning) {
+                document.getElementById("scanned-text").textContent = "";
+                startScanning();
+            } else {
+                alert("Please finish the current scan before starting a new one.");
+            }
+        }
+
+        // Function to stop showing the camera feed
+        function stopCamera() {
+            toggleCameraVisibility(false);
+        }
+
+        // Function to toggle the visibility of the camera feed
+        function toggleCameraVisibility(visible) {
+            isCameraVisible = visible;
+            var viewport = document.getElementById('interactive');
+            viewport.style.display = visible ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>
