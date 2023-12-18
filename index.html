@@ -6,6 +6,12 @@
     <title>Mobile Barcode Scanner</title>
     <!-- Include QuaggaJS library -->
     <script src="https://cdn.jsdelivr.net/npm/quagga"></script>
+    <style>
+        /* Style to hide the camera feed by default */
+        #interactive {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <h1>Mobile Barcode Scanner</h1>
@@ -14,7 +20,10 @@
     <button onclick="startScanning()">Start Scanning</button>
     <button onclick="initiateNewScan()">New Scan</button>
     <button onclick="stopCamera()">Stop Camera</button>
-
+<p>
+    <!-- Google Forms iframe -->
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfTlGPk387WTZPF53L7G9_KQpNoluxsNmENn2PJWaBJLRaFvQ/viewform?embedded=true" width="640" height="1582" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+</p>
     <!-- Script to initialize QuaggaJS and handle barcode scanning -->
     <script>
         var isScanning = false;
